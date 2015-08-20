@@ -1,4 +1,4 @@
-Chartbuilder :chart_with_upwards_trend:
+BSAN Chartbuilder (Based of Chartbuilder) :chart_with_upwards_trend:
 ============
 
 Chartbuilder is a front-end charting application that facilitates easy creation of simple beautiful charts.
