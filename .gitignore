@@ -1,0 +1,9 @@
+node_modules/**
+build
+!node_modules/stylus-normalize
+.DS_Store
+.tmp
+.lvimrc
+npm-debug.log
+bower_components/
+src/fonts
