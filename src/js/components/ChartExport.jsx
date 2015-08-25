@@ -303,6 +303,7 @@ var ChartExport = React.createClass({
 				text="Download Image"
 			/>
 		];
+		
 		if (this.state.enableSvgExport) {
 			chartExportButtons.push(
 				<Button
@@ -314,16 +315,16 @@ var ChartExport = React.createClass({
 			);
 		}
 
-		if (this.state.enableJSONExport) {
-			chartExportButtons.push(
-				<Button
-					key="json-export"
-					className="export-button"
-					onClick={this.downloadJSON}
-					text="Download JSON"
-				/>
-			);
-		}
+		// if (this.state.enableJSONExport) {
+		// 	chartExportButtons.push(
+		// 		<Button
+		// 			key="json-export"
+		// 			className="export-button"
+		// 			onClick={this.downloadJSON}
+		// 			text="Download JSON"
+		// 		/>
+		// 	);
+		// }
 
 		return (
 			<div className="editor-options">
