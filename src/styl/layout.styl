@@ -1,6 +1,7 @@
-$header-height = 3em
+$header-height = 7em
 $chart-area-width = 640px
 $chart-area-padding = 20px
+$max-width = 1200px
 
 // Page layout setup
 
@@ -11,18 +12,19 @@ html, body
 	overflow-x none
 
 h1, h2, h4, h5
-	font-family $font-sans-bold
 	color $color-body-text
+	font-weight: normal
 
 h1
 	line-height 50px
 	margin-bottom 10px
 
 h2
+	font-family: $font-sans
 	font-size 24px
 	line-height 24px
-	font-style bold
 	margin 40px 0px
+	color: #147FD7
 
 h3
 	font-size 20px
@@ -103,15 +105,19 @@ canvas
 * Layout
 */
 
-.header
-	background-color #333
+.header-wrapper
+	background-color #147FD7
 	margin-top 0
 	top 0
 	position fixed
 	height $header-height
 	width 100%
 	z-index 10000
-	padding 0.5em 0 0 0.25em
+	padding 0
+	.header {
+		width: $max-width
+		margin: 0 auto
+	}
 	h1
 		color #777
 		margin 0
@@ -119,18 +125,19 @@ canvas
 		padding 0
 
 .chartbuilder-container
+	width: $max-width
+	margin: 0 auto
 	margin-top $header-height + 0.75
 	position relative
-	overflow hidden
 
 .chartbuilder-renderer
 	width $chart-area-width
-	left ($chart-area-padding / 2)
-	top $header-height
+	right 0
+	top 0
 	overflow-y scroll
 	overflow-x hidden
 	height 100%
-	position fixed
+	position absolute;
 	margin-top $chart-area-padding
 	.desktop
 		width $chart-area-width
@@ -166,7 +173,6 @@ canvas
 @import 'chart-renderer.styl'
 
 .chartbuilder-editor
-	margin-left $chart-area-width + ($chart-area-padding * 2)
 	margin-bottom 30px
 	display inline-block
 	width 40%
