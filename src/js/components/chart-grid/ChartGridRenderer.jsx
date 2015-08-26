@@ -59,6 +59,7 @@ var ChartGridRenderer = React.createClass({
 		var gridTypeRenderer;
 		var dimensions;
 		var scale;
+
 		if (this.props.enableResponsive && _chartProps.hasOwnProperty("mobile") && this.props.isSmall) {
 			if (_chartProps.mobile.scale) {
 				scale = this._createMobileScale(_chartProps);

@@ -48,7 +48,7 @@ var display = {
 	margin: {
 		top: "1em",
 		right: "0.25em",
-		bottom: "0.15em",
+		bottom: "1em",
 		left: "0.5em"
 	},
 	padding: {

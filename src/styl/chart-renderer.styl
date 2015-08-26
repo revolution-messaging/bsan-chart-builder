@@ -99,7 +99,8 @@ svg
         stroke-linecap round
         stroke-linejoin round
     .label
-      font-family $font-sans-light
+      font-family $font-serif
+      text-transform uppercase
 
   .column-label
     fill $color-chart-axis-text
@@ -114,12 +115,16 @@ svg
   font-family $font-sans-light
   font-size $em_size
   &.svg-text-credit
-    font-size $em_size*0.6
+    font-size $em_size_small
     fill $color-chart-meta
     text-anchor start
+    font-family $font-serif
+    text-transform uppercase
   &.svg-text-source
-    font-size $em_size*0.6
+    font-size $em_size_small
     fill $color-chart-meta
+    font-family $font-serif
+    text-transform uppercase
     //text
       //dominant-baseline central
     &.left
@@ -129,7 +134,7 @@ svg
   &.svg-text-title
     fill $color-body-text
     font-family $font-sans
-    font-size $em_size
+    font-size $em_size_large
 
 .svg-source-pipe
 	stroke $color-chart-meta
@@ -137,9 +142,10 @@ svg
 	stroke-width 0.8px
 
 .svg-label-text
-  font-size $em_size_large
-  font-family $font-sans-light
+  font-size $em_size
+  font-family $font-serif
   cursor move
+  text-transform uppercase
 
 .crosshair
   line
@@ -164,11 +170,11 @@ svg
   .svg-text
     font-size $em_size
     &.svg-text-credit
-      font-size $em_size*0.6
+      font-size $em_size_small
     &.svg-text-source
-      font-size $em_size*0.6
+      font-size $em_size_small
     &.svg-text-title
-      font-size $em_size
+      font-size $em_size_large
 
 .small
   .em-size
@@ -192,7 +198,7 @@ svg
         dominant-baseline central
         font-size $em_size*0.6
     &.svg-text-title
-      font-size $em_size_small
+      font-size $em_size
 
   .svg-label-text
     font-size $em_size_small
@@ -211,11 +217,12 @@ svg
   .svg-text
     font-size $em_size
     &.svg-text-credit
-      font-size $em_size*0.6
+      font-size $em_size_small
     &.svg-text-source
-      font-size $em_size*0.6
+      font-size $em_size_small
+      margin-bottom: 20px;
     &.svg-text-title
-      font-size $em_size
+      font-size $em_size_large
 
   .svg-label-text
     font-size $em_size

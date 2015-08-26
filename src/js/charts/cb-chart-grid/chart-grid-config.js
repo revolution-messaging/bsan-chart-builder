@@ -35,9 +35,9 @@ var display = {
 	bottomPaddingWithoutFooter: "0.5em",
 	xy: require("../cb-xy/xy-config").display,
 	margin: {
-		top: "0.75em",
+		top: "1em",
 		right: "1em",
-		bottom: "0.15em",
+		bottom: "1em",
 		left: "0.5em"
 	},
 	padding: {
