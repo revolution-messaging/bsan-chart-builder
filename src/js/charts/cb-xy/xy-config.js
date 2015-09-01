@@ -31,10 +31,10 @@ var ChartConfig = require("../ChartConfig");
 */
 var display = {
 	labelRectSize: "0.6em",
-	labelXMargin: "0.6em",
+	labelXMargin: "1em",
 	labelTextMargin: "0.3em",
 	labelRowHeight: "1.2em",
-	afterTitle: "1.6em",
+	afterTitle: "2em",
 	afterLegend: "1.6em",
 	blockerRectOffset: "0.3em",
 	columnPaddingCoefficient: 0.3,
@@ -46,10 +46,10 @@ var display = {
 		smallSpot: (3 / 4)
 	},
 	margin: {
-		top: "1em",
-		right: "0.25em",
+		top: "1.5em",
+		right: "1em",
 		bottom: "1em",
-		left: "0.5em"
+		left: "1em"
 	},
 	padding: {
 		top: 0,
