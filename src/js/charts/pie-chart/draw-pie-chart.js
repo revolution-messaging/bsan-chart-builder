@@ -308,7 +308,6 @@ var pie_chart = d4.chart("pie-chart", function() {
 		.mixin(mixin)
 		
 		.using("lines", function(line) {
-			console.log(this);
 			using.lines.call(this, line, "primary");
 		})
 		.using("bars", function(bars) {

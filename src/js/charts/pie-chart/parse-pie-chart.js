@@ -7,7 +7,6 @@ var filter = require("lodash/collection/filter");
 var dataBySeries = require("../../util/parse-data-by-series");
 var help = require("../../util/helper");
 
-var scaleNames = ["primaryScale", "secondaryScale"];
 
 /**
  * see [ChartConfig#parser](#chartconfig/parser)
@@ -17,26 +16,24 @@ var scaleNames = ["primaryScale", "secondaryScale"];
  */
 function parsePieChart(config, _chartProps, callback, parseOpts) {
 
+	console.log(_chartProps);
+
 	// Build chart settings from defaults or provided settings
 
 	parseOpts = parseOpts || {};
+
+	console.log(parseOpts);
+
 	// clone so that we aren't modifying original
 	// this can probably be avoided by applying new settings differently
 	var chartProps = JSON.parse(JSON.stringify(_chartProps));
+
+	console.log(chartProps);
 
 	var bySeries = dataBySeries(chartProps.input.raw, { checkForDate: true });
 	var labels = chartProps._annotations.labels;
 	var allColumn = true;
 	// check if either scale contains columns, as we'll need to zero the axis
-	var _scaleComputed = {};
-
-	each(scaleNames, function(name) {
-		_scaleComputed[name] = {
-			data: [],
-			hasColumn: false,
-			count: 0
-		};
-	});
 
 	var chartSettings = map(bySeries.series, function(dataSeries, i) {
 
@@ -164,21 +161,12 @@ function parsePieChart(config, _chartProps, callback, parseOpts) {
 		scale.secondaryScale.colorIndex = null;
 	}
 
-	// create the data structure for the renederer based on input
-	if (bySeries.hasDate) {
-		scale.hasDate = bySeries.hasDate;
-		scale.dateSettings = chartProps.scale.dateSettings || clone(config.defaultProps.chartProps.scale.dateSettings);
-	}
-
 	var newChartProps = assign(chartProps, {
 		chartSettings: chartSettings,
 		scale: scale,
 		input: bySeries.input,
 		data: bySeries.series,
-		_numSecondaryAxis: _scaleComputed.secondaryScale.count
 	});
-
-	console.log(newChartProps);
 
 	if (callback) {
 		callback(newChartProps);

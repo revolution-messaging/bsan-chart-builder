@@ -20,7 +20,6 @@ var reduce = require("lodash/collection/reduce");
 var some = require("lodash/collection/some");
 
 var ChartRendererMixin = require("../mixins/ChartRendererMixin.js");
-var DateScaleMixin = require("../mixins/DateScaleMixin.js");
 
 // Flux actions
 var ChartViewActions = require("../../actions/ChartViewActions");
@@ -186,8 +185,6 @@ var PieChart = React.createClass({
 		}
 	},
 
-	mixins: [ DateScaleMixin ],
-
 	componentDidMount: function() {
 		// Draw chart once mounted
 		var el = this.getDOMNode();
@@ -200,7 +197,7 @@ var PieChart = React.createClass({
 				el.removeChild(el.childNodes[0]);
 			}
 	
-			drawPieChart(el, this._getChartState(this.props));
+			//drawPieChart(el, this._getChartState(this.props));
 		}
 	},
 
@@ -208,7 +205,7 @@ var PieChart = React.createClass({
 		// always update by redrawing the chart
 		var el = this.getDOMNode();
 
-		drawPieChart(el, this._getChartState(nextProps));
+		//drawPieChart(el, this._getChartState(nextProps));
 		return false;
 	},
 
@@ -312,8 +309,6 @@ var PieChartLabels = React.createClass({
 			dateScaleInfo: null
 		};
 	},
-
-	mixins: [ DateScaleMixin ],
 
 	componentWillReceiveProps: function(nextProps) {
 		// Determine how far down vertically the labels should be placed, depending
@@ -596,7 +591,6 @@ function drawPieChart(el, state) {
 		// 	yAxisUsing.call(this,"primary",axis,el,state)
 		// })
 		.x(function(x) {
-			console.log(x);
 			x.key("entry");
 			var o = xScaleInfo(this.width,this.padding,styleConfig,displayConfig,state);
 			if (state.dateSettings) {

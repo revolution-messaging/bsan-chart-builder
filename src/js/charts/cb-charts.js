@@ -1,6 +1,6 @@
 var cb_xy = require("./cb-xy/draw-xy");
 var cb_bar_grid = require("./cb-chart-grid/draw-bar-grid");
-//var pie_chart = require("./pie-chart/draw-pie-chart");
+var pie_chart = require("./pie-chart/draw-pie-chart");
 
 /**
  * Object that exposes Chartbulider's d4 chart constructors

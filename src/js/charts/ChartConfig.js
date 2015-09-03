@@ -47,6 +47,7 @@ function ChartConfig(settings) {
 	this.calculateDimensions = settings.calculateDimensions;
 	this.display = settings.display;
 	this.defaultProps = settings.defaultProps;
+	
 }
 
 module.exports = ChartConfig;

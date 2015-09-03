@@ -83,24 +83,11 @@ var defaultProps = {
 	 * @memberof xy_defaultProps
 	 */
 	chartProps: {
-		scale: {
-			primaryScale: {
-				ticks: 5,
-				precision: 0,
-				prefix: "",
-				suffix: ""
-			},
-			dateSettings: {
-				dateFrequency: "auto",
-				dateFormat: "auto"
-			}
-		},
+		scale: {},
 		data: [],
 		input: {},
 		chartSettings: [
 			{
-				altAxis: false,
-				type: "slice",
 				colorIndex: 0
 			}
 		],
