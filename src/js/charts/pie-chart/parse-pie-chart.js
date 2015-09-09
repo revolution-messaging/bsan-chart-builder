@@ -7,7 +7,6 @@ var filter = require("lodash/collection/filter");
 var dataBySeries = require("../../util/parse-data-by-series");
 var help = require("../../util/helper");
 
-
 /**
  * see [ChartConfig#parser](#chartconfig/parser)
  * @see ChartConfig#parser
@@ -16,28 +15,20 @@ var help = require("../../util/helper");
  */
 function parsePieChart(config, _chartProps, callback, parseOpts) {
 
-	console.log(_chartProps);
-
 	// Build chart settings from defaults or provided settings
 
 	parseOpts = parseOpts || {};
-
-	console.log(parseOpts);
-
 	// clone so that we aren't modifying original
 	// this can probably be avoided by applying new settings differently
 	var chartProps = JSON.parse(JSON.stringify(_chartProps));
 
-	console.log(chartProps);
-
 	var bySeries = dataBySeries(chartProps.input.raw, { checkForDate: true });
 	var labels = chartProps._annotations.labels;
-	var allColumn = true;
-	// check if either scale contains columns, as we'll need to zero the axis
 
 	var chartSettings = map(bySeries.series, function(dataSeries, i) {
-
 		var settings;
+
+		// Set setting for value
 		if (chartProps.chartSettings[i]) {
 			settings = chartProps.chartSettings[i];
 		} else {
@@ -45,32 +36,12 @@ function parsePieChart(config, _chartProps, callback, parseOpts) {
 			settings.colorIndex = i;
 		}
 
-		if (parseOpts.columnsChanged) {
-			settings.label = dataSeries.name;
-		} else {
-			settings.label = settings.label || dataSeries.name;
-		}
+		settings.label = settings.label || dataSeries.name;	
 
 		var values = map(dataSeries.values, function(d) {
 			return +d.value;
 		});
 
-		// add data points to relevant scale
-		if (settings.altAxis === false) {
-			var _computed = _scaleComputed.primaryScale;
-			_computed.data = _computed.data.concat(values);
-			_computed.count += 1;
-			if (settings.type == "column") {
-				_computed.hasColumn = true;
-			}
-		} else {
-			var _computed = _scaleComputed.secondaryScale;
-			_computed.data = _computed.data.concat(values);
-			_computed.count += 1;
-			if (settings.type == "column") {
-				_computed.hasColumn = true;
-			}
-		}
 		return settings;
 	});
 
@@ -84,88 +55,15 @@ function parsePieChart(config, _chartProps, callback, parseOpts) {
 		}
 	});
 
-	var maxPrecision = 5;
-	var factor = Math.pow(10, maxPrecision);
-
-	var scale = {};
-	var mobileScale = {};
-
-	// Calculate domain and tick values for any scales that exist
-	each(scaleNames, function(name) {
-		var _computed = _scaleComputed[name];
-		if (_computed.count > 0) {
-			var currScale = chartProps.scale[name] || clone(config.defaultProps.chartProps.scale.primaryScale);
-			var domain = help.computeScaleDomain(currScale, _computed.data, {
-				nice: true,
-				minZero: _computed.hasColumn
-			});
-			assign(currScale, domain);
-
-			var ticks;
-			if (name === "primaryScale") {
-				ticks = currScale.ticks;
-			} else {
-				ticks = scale.primaryScale.ticks;
-			}
-
-			currScale.tickValues = help.exactTicks(currScale.domain, ticks);
-			each(currScale.tickValues, function(v) {
-				var tickPrecision = help.precision(Math.round(v*factor)/factor);
-				if (tickPrecision > currScale.precision) {
-					currScale.precision = tickPrecision;
-				}
-			});
-
-			scale[name] = currScale;
-
-			if (chartProps.mobile) {
-				if (chartProps.mobile.scale) {
-					var currMobile = chartProps.mobile.scale[name];
-					if (currMobile) {
-						var domain = help.computeScaleDomain(currMobile, _computed.data, {
-							nice: true,
-							minZero: _computed.hasColumn
-						});
-						assign(currMobile, domain);
-
-						var ticks = (name == "primaryScale") ? currMobile.ticks : scale.primaryScale.ticks;
-						currMobile.tickValues = help.exactTicks(currMobile.domain, ticks);
-						each(currMobile.tickValues, function(v) {
-							var tickPrecision = help.precision(Math.round(v*factor)/factor);
-							if (tickPrecision > currMobile.precision) {
-								currMobile.precision = tickPrecision;
-							}
-						});
-					}
-				}
-			} else {
-				chartProps.mobile = {};
-			}
-		}
-	});
-
-	// If there is only one primary and >0 secondary, color the left axis
-	if (_scaleComputed.primaryScale.count === 1 && _scaleComputed.secondaryScale.count > 0) {
-		scale.primaryScale.colorIndex = filter(chartSettings, function(series) {
-			return (series.altAxis === false);
-		})[0].colorIndex;
-	} else {
-		scale.primaryScale.colorIndex = null;
-	}
-	// If there is only one secondary and >0 primary, color the right axis
-	if (_scaleComputed.secondaryScale.count === 1 && _scaleComputed.primaryScale.count > 0) {
-		scale.secondaryScale.colorIndex = filter(chartSettings, function(series) {
-			return (series.altAxis === true);
-		})[0].colorIndex;
-	} else if (_scaleComputed.secondaryScale.count > 0) {
-		scale.secondaryScale.colorIndex = null;
+	var scale = {
+		type: 'pie'
 	}
 
 	var newChartProps = assign(chartProps, {
 		chartSettings: chartSettings,
 		scale: scale,
 		input: bySeries.input,
-		data: bySeries.series,
+		data: bySeries.series
 	});
 
 	if (callback) {
@@ -173,7 +71,6 @@ function parsePieChart(config, _chartProps, callback, parseOpts) {
 	} else {
 		return newChartProps;
 	}
-
 }
 
 module.exports = parsePieChart;

@@ -19,6 +19,7 @@ function parseXY(config, _chartProps, callback, parseOpts) {
 	// Build chart settings from defaults or provided settings
 
 	parseOpts = parseOpts || {};
+
 	// clone so that we aren't modifying original
 	// this can probably be avoided by applying new settings differently
 	var chartProps = JSON.parse(JSON.stringify(_chartProps));
@@ -26,6 +27,7 @@ function parseXY(config, _chartProps, callback, parseOpts) {
 	var bySeries = dataBySeries(chartProps.input.raw, { checkForDate: true });
 	var labels = chartProps._annotations.labels;
 	var allColumn = true;
+
 	// check if either scale contains columns, as we'll need to zero the axis
 	var _primaryColumn = false;
 	var _secondaryColumn = false;

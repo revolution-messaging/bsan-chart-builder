@@ -20,7 +20,7 @@ var cb_charts = {
 	 */
 	cb_bar_grid: cb_bar_grid,
 
-	//pie_chart: pie_chart,
+	pie_chart: pie_chart,
 
 };
 

@@ -2,7 +2,7 @@
 var chartConfig = {
 	xy: require("./cb-xy/xy-config"),
 	chartgrid: require("./cb-chart-grid/chart-grid-config"),
-	//piechart: require("./pie-chart/pie-chart-config"),
+	piechart: require("./pie-chart/pie-chart-config"),
 };
 
 module.exports = chartConfig;

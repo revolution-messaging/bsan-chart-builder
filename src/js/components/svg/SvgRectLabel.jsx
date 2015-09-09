@@ -78,6 +78,7 @@ var SvgRectLabel = React.createClass({
 	},
 
 	componentWillReceiveProps: function(nextProps) {
+
 		var proportionalComputedPos = this._fromPropotionalPostion(nextProps.settings,nextProps);
 		var valueComputedPos = this._fromValuePosition({x:nextProps.settings.val_x, y:nextProps.settings.val_y});
 		var elementPos = {
@@ -218,13 +219,15 @@ var SvgRectLabel = React.createClass({
 	},
 
 	_fromPropotionalPostion: function(pos,props){
+		
 		if (!props) {
 			props = this.props;
 		}
-		return {
+		var position = {
 			x: pos.x * props.dimensions.width,
 			y: pos.y * props.dimensions.height,
 		};
+		return position;
 	},
 
 	_fromValuePosition: function(vals,xScale,yScale) {
@@ -415,6 +418,11 @@ var SvgRectLabel = React.createClass({
 			translate = [ this.state.valueComputed.x || this.state.proportionalComputed.x, this.state.valueComputed.y ];
 		} else {
 			translate = [ this.state.proportionalComputed.x, this.state.proportionalComputed.y ];
+		}
+
+		// Make labels vertical for pie charts
+		if(this.props.vertical&&this.props.vertical==true) {
+			translate = [0, this.props.labelConfig.rowHeight * this.props.index]
 		}
 
 		// only add rect if we haven't dragged

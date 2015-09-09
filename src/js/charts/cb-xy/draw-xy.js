@@ -283,6 +283,7 @@ var using = {
 };
 
 var cb_xy = d4.chart("cb-xy", function() {
+	
 	var singleLineDotThresh = false;
 	var totalLinePoints = 0;
 

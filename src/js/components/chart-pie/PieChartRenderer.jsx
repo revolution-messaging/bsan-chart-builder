@@ -1,6 +1,3 @@
-// Render an XY chart (line, column, scatterplot). It allows mixed charts
-// combining any of these types, as well as time series
-
 // React
 var React = require("react");
 var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
@@ -32,17 +29,6 @@ var HiddenSvg = require("../svg/HiddenSvg.jsx");
 var pie_chart = require("../../charts/cb-charts").pie_chart;
 var help = require("../../util/helper.js");
 
-var scaleNames = ["primaryScale", "secondaryScale"];
-
-/**
- * ### Component that renders XY (line, column, dot) charts
- * @property {boolean} editable - Allow the rendered component to interacted with and edited
- * @property {object} displayConfig - Parsed visual display configuration for chart grid
- * @property {object} chartProps - Properties used to draw this chart
- * @property {object} metadata - Title, data source, etc
- * @instance
- * @memberof renderers
- */
 var PieChartRenderer = React.createClass({
 
 	propTypes: {
@@ -78,25 +64,16 @@ var PieChartRenderer = React.createClass({
 		//Dimensions of the chart area
 		var chartAreaDimensions = {
 			width: (dimensions.width -
-							displayConfig.margin.left - displayConfig.margin.right -
-							displayConfig.padding.left - displayConfig.padding.right),
+				displayConfig.margin.left - displayConfig.margin.right -
+				displayConfig.padding.left - displayConfig.padding.right),
 			height: (dimensions.height -
-							 displayConfig.margin.top - displayConfig.margin.bottom -
-							 displayConfig.padding.top - displayConfig.padding.bottom)
+				displayConfig.margin.top - displayConfig.margin.bottom -
+				displayConfig.padding.top - displayConfig.padding.bottom)
 		};
-
-		if (this.props.enableResponsive && _chartProps.hasOwnProperty("mobile") && this.props.isSmall) {
-			if (_chartProps.mobile.scale) {
-				scale = assign({}, _chartProps.scale, _chartProps.mobile.scale);
-			} else {
-				scale = _chartProps.scale;
-			}
-		} else {
-			scale = _chartProps.scale;
-		}
 
 		// apply `chartSettings` to data
 		var dataWithSettings = this._applySettingsToData(_chartProps);
+
 		// compute margin based on existence of labels and title, based on default
 		// margin set in config
 		var labels = _chartProps._annotations.labels;
@@ -117,12 +94,6 @@ var PieChartRenderer = React.createClass({
 					metadata={this.props.metadata}
 				/>
 
-			</g>
-		);
-	}
-});
-
-/**
 
 
 				<PieChartLabels
@@ -138,29 +109,11 @@ var PieChartRenderer = React.createClass({
 					dimensions={dimensions}
 				/>
 
- * ### Component that renders the XY chart area (not annotations)
- * See `React.PropTypes` declaration:
- * @example
- * propTypes: {
- *   chartProps: PropTypes.object.isRequired,
- *   hasTitle: PropTypes.bool.isRequired,
- *   displayConfig: PropTypes.object.isRequired,
- *   styleConfig: PropTypes.object.isRequired,
- *   data: PropTypes.arrayOf(PropTypes.object).isRequired,
- *   dimensions: PropTypes.shape({
- *     width: PropTypes.number,
- *     height: PropTypes.number
- *   }).isRequired,
- *   scale: PropTypes.object.isRequired,
- *   chartAreaDimensions: PropTypes.object,
- *   metadata: PropTypes.object,
- *   labelYMax: PropTypes.number,
- *   maxTickWidth: PropTypes.object,
- *   axisTicks: PropTypes.array
- * },
- * @instance
- * @memberof XYRenderer
- */
+			</g>
+		);
+	}
+});
+
 var PieChart = React.createClass({
 
 	propTypes: {
@@ -197,7 +150,7 @@ var PieChart = React.createClass({
 				el.removeChild(el.childNodes[0]);
 			}
 	
-			//drawPieChart(el, this._getChartState(this.props));
+			drawPieChart(el, this._getChartState(this.props));
 		}
 	},
 
@@ -205,7 +158,7 @@ var PieChart = React.createClass({
 		// always update by redrawing the chart
 		var el = this.getDOMNode();
 
-		//drawPieChart(el, this._getChartState(nextProps));
+		drawPieChart(el, this._getChartState(nextProps));
 		return false;
 	},
 
@@ -223,25 +176,21 @@ var PieChart = React.createClass({
 	},
 
 	_getChartState: function(props) {
+
 		// Generate and return the state needed to draw the chart. This is what will
 		// passed to the d4/d3 draw function.
 		var dateSettings;
 		if (props.chartProps.scale.hasDate) {
 			dateSettings = this.generateDateScale(props);
 		}
+
 		var computedPadding = computePadding(props);
-		var hasColumn = some(props.chartProps.chartSettings, function(setting) {
-			return setting.type == "column";
-		});
 
 		return {
 			chartRenderer: pie_chart(),
 			styleConfig: props.styleConfig,
 			displayConfig: props.displayConfig,
 			dateSettings: dateSettings,
-			maxTickWidth: props.maxTickWidth,
-			hasColumn: hasColumn,
-			axisTicks: props.axisTicks,
 			dimensions: props.dimensions,
 			data: props.data,
 			padding: computedPadding,
@@ -260,31 +209,6 @@ var PieChart = React.createClass({
 
 });
 
-/**
- * ### Component that renders the legend labels for an XY chart
- * See `React.PropTypes` declaration for properties:
- * @example
- * propTypes: {
- *   chartProps: PropTypes.object.isRequired,
- *   hasTitle: PropTypes.bool.isRequired,
- *   displayConfig: PropTypes.object.isRequired,
- *   styleConfig: PropTypes.object.isRequired,
- *   data: PropTypes.arrayOf(PropTypes.object).isRequired,
- *   dimensions: PropTypes.shape({
- *     width: PropTypes.number,
- *     height: PropTypes.number
- *   }).isRequired,
- *   scale: PropTypes.object.isRequired,
- *   chartAreaDimensions: PropTypes.object,
- *   metadata: PropTypes.object,
- *   labelYMax: PropTypes.number,
- *   updateLabelYMax: PropTypes.func,
- *   maxTickWidth: PropTypes.object,
- *   axisTicks: PropTypes.array
- * },
- * @instance
- * @memberof XYRenderer
- */
 var PieChartLabels = React.createClass({
 
 	propTypes: {
@@ -311,6 +235,7 @@ var PieChartLabels = React.createClass({
 	},
 
 	componentWillReceiveProps: function(nextProps) {
+
 		// Determine how far down vertically the labels should be placed, depending
 		// on presence (or not) of a title
 		var yOffset;
@@ -395,9 +320,6 @@ var PieChartLabels = React.createClass({
 				undraggedLabels: undragged
 			}}));
 			var labelYMax = this._getLabelYMax(undragged, this.props.dimensions.height);
-			if (labelYMax !== this.props.labelYMax) {
-				this.props.updateLabelYMax(labelYMax);
-			}
 		}
 	},
 
@@ -431,6 +353,7 @@ var PieChartLabels = React.createClass({
 		var props = this.props;
 		var dimensions = props.dimensions;
 		var padding = computePadding(props, this.props.dimensions.height);
+		var isVertical = true;
 
 		var labelConfig = {
 			xMargin: displayConfig.labelXMargin,
@@ -455,24 +378,6 @@ var PieChartLabels = React.createClass({
 				}
 
 				var scales = this.props.scale;
-				yScale_info = !chartSetting.altAxis ? scales.primaryScale : scales.secondaryScale;
-				xScale_info = xScaleInfo(this.props.dimensions.width,padding,styleConfig,displayConfig,{dateSettings: this.state.dateScaleInfo});
-				scale = {
-					y: {
-						domain: yScale_info.domain,
-						range:[
-							this.props.dimensions.height - padding.bottom - displayConfig.margin.bottom,
-							padding.top + displayConfig.margin.top
-							]
-					},
-					x: {
-						domain: xScale_info.domain ? xScale_info.domain : [],
-						range: props.chartProps.scale.hasDate ? [
-							padding.left + displayConfig.margin.left + this.props.maxTickWidth.primaryScale,
-							xScale_info.rangeR-padding.right-displayConfig.margin.right-this.props.maxTickWidth.secondaryScale - displayConfig.minPaddingOuter
-							] : []
-					}
-				};
 
 				labelComponents.push(
 					<SvgRectLabel
@@ -489,6 +394,7 @@ var PieChartLabels = React.createClass({
 						settings={labelSettings}
 						prevNode={prevNode}
 						scale={scale}
+						vertical={isVertical}
 					/>
 				);
 			}, this);
@@ -512,52 +418,6 @@ d3.selection.prototype.moveToFront = function() {
   });
 };
 
-var xy_render_options = {
-	axis : {
-		afterRender: function(feature,data,chartArea,selection,isPrimary) {
-			/* SO HERES THE DEAL
-			// this is a lot of effort to customize axes
-			// what we do at Quartz instead of this is build
-			// our own d3 that draws axes exactly how we want them
-			// If you're getting serious about customization,
-			// I suggest you do the same.
-			*/
-			var chart = this;
-			var ticks = selection.selectAll(".tick");
-			var text = ticks.selectAll("text");
-			var max = d3.max(this.y.domain());
-
-			ticks.classed("zero", function(d) {
-				return (d === 0);
-			});
-
-			if (isPrimary) {
-				var maxTick = ticks.filter(function(d) {
-					return (d === max);
-				});
-				var maxTickRect = maxTick.selectAll("rect").data([0]).enter().append("rect");
-				var maxTickText = maxTick.select("text");
-				var textNode = maxTickText.node();
-				var bcr = textNode.getBoundingClientRect();
-				var width = bcr.width;
-				var x = parseFloat(textNode.getAttribute("x"));
-				var newX = x;
-				if (width + (-x) > chart.width - 12) {
-					newX = width - chart.width + chart.margin.left + 12;
-					maxTickText.attr("x", newX);
-				}
-				maxTick.select("rect").attr({
-					x: newX - width,
-					y: (-1 * bcr.height / 2),
-					width: width + 6,
-					height: bcr.height
-				});
-				maxTickText.moveToFront();
-			}
-		}
-	}
-}
-
 function drawPieChart(el, state) {
 
 	var chartProps = state.chartProps;
@@ -566,170 +426,67 @@ function drawPieChart(el, state) {
 	var styleConfig = state.styleConfig;
 	var hasOtherAxis = chartProps._numSecondaryAxis > 0;
 	var scale = state.scale;
-	//var borderSpace = help.combineMarginPadding(chartProps.margin,chartProps.padding);
 
-	// set the `extraPadding` based on pre-computed `maxTickWidth` values,
-	// generated by the `HiddenAxes` component
 	var extraPadding = {
 		top: chartProps.extraPadding.top,
 		right: chartProps.extraPadding.right,
 		bottom: chartProps.extraPadding.bottom,
 		left: chartProps.extraPadding.left
 	};
+
+	var w = state.dimensions.width;
+	var h = state.dimensions.height;
+	var r = w/5;
+	var color = d3.scale.category20c();
+
+	var data = state.data;
+
+	var vis = d3.select(el)
+		.append("svg:svg")
+		.data([data])
+		.attr("width", w)
+		.attr("height", h)
+		.append("svg:g")
+		.attr("transform", "translate(" + w/2 + "," + h/2 + ")");
 	
-	// var mixouts = chartProps._numSecondaryAxis ? [] : ["rightAxis"]
-
-	var pieChart = state.chartRenderer
-		.outerWidth(state.dimensions.width)
-		.outerHeight(state.dimensions.height)
-		.margin(displayConfig.margin)
-		.padding(state.padding)
-		.extraPadding(extraPadding)
-		.mixout("series-label")
-		// .using("leftAxis", function(axis){
-		// 	console.log(axis);
-		// 	yAxisUsing.call(this,"primary",axis,el,state)
-		// })
-		.x(function(x) {
-			x.key("entry");
-			var o = xScaleInfo(this.width,this.padding,styleConfig,displayConfig,state);
-			if (state.dateSettings) {
-				x.scale("time");
-				x.domain(o.domain);
-				x.range([o.rangeL, o.rangeR]);
-			}
-		})
-		.y(function(y) {
-			y.key("value")
-				.domain(scale.primaryScale.domain)
-				.range([this.height - this.padding.bottom, state.padding.top])
-		})
-		.left(function(y) {
-			y.key("value")
-				.domain(scale.primaryScale.domain)
-				.range([this.height - this.padding.bottom, state.padding.top])
-		})
-		.using("rightAxis", function(axis){
-			yAxisUsing.call(this,"secondary",axis,el,state)
-		})
-		.chartAreaOnTop(false)
-		.using("xAxis", function(axis) {
-
-			axis.beforeRender(function(data) {
-				// Center ticks if all data series are columns
-				var numColumns = filter(data, function(d) {
-					return d.type === "column";
-				}).length;
-
-				// Don't display the x axis grid tick if all series are columns
-				if (numColumns === data.length) {
-					axis.innerTickSize(styleConfig.overtick_bottom);
-				} else {
-					axis.innerTickSize(styleConfig.overtick_bottom);
-					this.container.selectAll(".xAxis .tick").attr("data-anchor", "start");
-				}
-			});
-
-			if (state.dateSettings) {
-				axis.tickValues(dateSettings.dateTicks);
-				axis.tickFormat(function(d,i) {
-					return dateSettings.dateFormatter(d,i);
-				});
-			}
-
-		});
-
-		if (chartProps._numSecondaryAxis > 0) {
-			xyChart.right(function(y) {
-				y.key("value")
-					.domain(scale.secondaryScale.domain)
-					.range([this.height - this.padding.bottom, state.padding.top])
-				}
-			);
-		}
-
- 	
-	d3.select(el)
-		.datum(state.data)
-		.call(pieChart);
-
-}
-
-function xScaleInfo(width, padding, styleConfig, displayConfig, state) {
-	var hasMultipleYAxes = false
-	if(state.secondaryScale) {
-		hasMultipleYAxes = true;
-	}
-	if (state.chartProps && state.chartProps._numSecondaryAxis) {
-		hasMultipleYAxes = true;
-	}
-	var o = {
-		rangeL: padding.left + styleConfig.xOverTick,
-		rangeR: width - padding.right - (hasMultipleYAxes ? styleConfig.xOverTick : 0),
-		domain: state.dateSettings ? state.dateSettings.domain : null
-	}
-
-	if (state.hasColumn) {
-		var numData = state.chartProps.data[0].values.length;
-		var widthPerColumn = width / numData;
-		o.rangeL += (widthPerColumn * displayConfig.columnPaddingCoefficient);
-		o.rangeR -= (widthPerColumn * displayConfig.columnPaddingCoefficient);
-	}
-	return o;
-}
-
-function yAxisUsing(location, axis, el, state) {
-	var chartProps = state.chartProps;
-	var isPrimary = location == "primary"
-	var scale = isPrimary ? state.scale.primaryScale : state.scale.secondaryScale;
-	var hasOtherAxis = chartProps._numSecondaryAxis > 0;
-	var scaleId = isPrimary ? "left" : "right";
-
-	if(!hasOtherAxis && !isPrimary) {
-		axis.render = function() {
-			this.container.selectAll(".right.axis").remove();
-		}
-		state.chartProps.extraPadding.right = 0;
-		return null;
-	}
-
-	// axis tick values have been computed by parent compnent in order to draw
-	// hidden axes, so we pass them in here
-	var axisTicks = isPrimary ? state.axisTicks[0] : state.axisTicks[1];
-	axis.tickValues(axisTicks.tickValues);
-
-	// format using our precision and suffix/prefix
-	axis.tickFormat(function(d) {
-		if (d == axisTicks.max) {
-			return [
-				scale.prefix,
-				help.roundToPrecision(d, scale.precision),
-				scale.suffix
-			].join("");
-		} else {
-			return help.roundToPrecision(d, scale.precision);
-		}
+	var pie = d3.layout.pie().value(function(d){
+		return d.values[0].value;
 	});
 
-	axis.afterRender(function(feature,data,chartArea,selection) {
-		this.container.select(".axis." + scaleId).selectAll(".tick text")
-			.attr("data-color-index", scale.colorIndex);
+	// declare an arc generator function
+	var arc = d3.svg.arc().outerRadius(r);
 
-		xy_render_options.axis.afterRender.call(this,feature,data,chartArea,selection,isPrimary);
-	});
-
-	var innerTickSize;
-	if (isPrimary) {
-		innerTickSize = this.width - this.padding.left - this.padding.right;
-		if (hasOtherAxis) {
-			innerTickSize -= state.displayConfig.blockerRectOffset;
+	 function getTotal(){
+		var counter = 0;
+		var total = 0;
+		while(counter<=state.data.length-1) {
+			total+=state.data[counter].values[0].value;
+			counter++;
 		}
-	} else {
-		innerTickSize = 0;
+		return total;
 	}
 
-	axis.innerTickSize( innerTickSize );
-	axis.scaleId(scaleId);
+	var totalValues = getTotal();
+	
+	// select paths, use arc generator to draw
+	var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+	arcs.append("svg:path")
+		.attr("data-color-index", function(d, i){
+	    	return state.chartProps.chartSettings[i].colorIndex;
+	    })
+	    .attr("d", function (d) {
+	        // log the result of the arc generator to show how cool it is :)
+	        return arc(d);
+	    });
+
+	// add the text
+	arcs.append("svg:text").attr('class','slice-text').attr("transform", function(d){
+			d.innerRadius = 0;
+			d.outerRadius = r;
+    return "translate(" + arc.centroid(d) + ")";}).attr("text-anchor", "middle").text( function(d) {
+    return Math.round(parseInt(d.value)/parseInt(totalValues)*100) + '%';}
+		);
+
 }
 
 function computePadding(props, chartHeight) {

@@ -15,9 +15,9 @@ module.exports = {
 		MobileOverrides: require("../components/chart-grid/ChartGridMobile.jsx")
 	},
 
-	// piechart: {
-	// 	Editor: require("../components/chart-pie/PieChartEditor.jsx"),
-	// 	MobileOverrides: require("../components/chart-pie/PieChartMobile.jsx")
-	// }
+	piechart: {
+		Editor: require("../components/chart-pie/PieChartEditor.jsx"),
+		MobileOverrides: require("../components/chart-pie/PieChartMobile.jsx")
+	}
 
 };
