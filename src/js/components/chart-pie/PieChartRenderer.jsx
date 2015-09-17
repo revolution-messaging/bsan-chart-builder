@@ -436,10 +436,13 @@ function drawPieChart(el, state) {
 
 	var w = state.dimensions.width;
 	var h = state.dimensions.height;
-	var r = w/5;
-	var color = d3.scale.category20c();
-
+	var r = w/5.5;
+	
 	var data = state.data;
+
+	while (el.firstChild) {
+    	el.removeChild(el.firstChild);
+	}
 
 	var vis = d3.select(el)
 		.append("svg:svg")
@@ -447,7 +450,7 @@ function drawPieChart(el, state) {
 		.attr("width", w)
 		.attr("height", h)
 		.append("svg:g")
-		.attr("transform", "translate(" + w/2 + "," + h/2 + ")");
+		.attr("transform", "translate(" + w/2 + "," + (h/2 + 30) + ")");
 	
 	var pie = d3.layout.pie().value(function(d){
 		return d.values[0].value;
@@ -471,21 +474,40 @@ function drawPieChart(el, state) {
 	// select paths, use arc generator to draw
 	var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
 	arcs.append("svg:path")
-		.attr("data-color-index", function(d, i){
-	    	return state.chartProps.chartSettings[i].colorIndex;
-	    })
-	    .attr("d", function (d) {
-	        // log the result of the arc generator to show how cool it is :)
-	        return arc(d);
-	    });
+	.attr("data-color-index", function(d, i){
+    	return state.chartProps.chartSettings[i].colorIndex;
+    })
+    .attr("d", function (d) {
+        // log the result of the arc generator to show how cool it is :)
+        return arc(d);
+    });
 
 	// add the text
 	arcs.append("svg:text").attr('class','slice-text').attr("transform", function(d){
-			d.innerRadius = 0;
-			d.outerRadius = r;
-    return "translate(" + arc.centroid(d) + ")";}).attr("text-anchor", "middle").text( function(d) {
-    return Math.round(parseInt(d.value)/parseInt(totalValues)*100) + '%';}
-		);
+			
+		d.innerRadius = 0;
+		d.outerRadius = r;
+
+		var c = arc.centroid(d),
+			x = c[0],
+	        y = c[1],
+			h = Math.sqrt(x*x + y*y),
+			labelr = r + 20;
+
+		return "translate(" + (x/h * labelr) +  ',' + (y/h * labelr) +  ")"; 
+
+	})
+	.attr("text-anchor", function(d) {
+	    // are we past the center?
+	    return (d.endAngle + d.startAngle)/2 > Math.PI ?
+	        "end" : "start";
+	})
+	.text( function(d) {
+
+		var label = ((parseInt(d.value)/parseInt(totalValues)) * 100).toFixed(2);
+
+    	return label + '%';
+    });
 
 }
 

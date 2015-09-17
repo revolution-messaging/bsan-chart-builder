@@ -1,5 +1,5 @@
 // Node modules
-var browserSync = require("browser-sync");
+var browserSync = require("browser-sync").create();;
 var buffer = require("vinyl-buffer");
 var del = require("del");
 var nib = require("nib");
@@ -128,14 +128,14 @@ gulp.task("copy-assets", function () {
 });
 
 gulp.task("browser-sync", ["watch"], function () {
-	browserSync({
+	browserSync.init({
 		server: { baseDir: "build" },
 		open: false
 	});
 });
 
 gulp.task("browser-sync-test", ["test-page"], function () {
-	browserSync({
+	browserSync.init({
 		server: { baseDir: "build" },
 		open: false
 	});
